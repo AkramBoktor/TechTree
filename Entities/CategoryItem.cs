@@ -25,7 +25,11 @@ namespace TechTreeMVCWebApplication.Entities
         //Make list to admin and not mapped to Our database
         [NotMapped]
         public virtual ICollection<SelectListItem> MediaTypes { get; set; }
+
         public DateTime DateTimeItemReleased { get; set; }
 
+        //one to one releationship between content and category item
+        [NotMapped]
+        public int contentId { get; set; }
     }
 }

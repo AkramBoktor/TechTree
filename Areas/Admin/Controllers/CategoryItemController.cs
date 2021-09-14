@@ -25,9 +25,17 @@ namespace TechTreeMVCWebApplication.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int categoryId)
         {
             ViewBag.categoryId = categoryId;
-            // get category item depended on the categoryId  One to Many ReleationShip between category and category item
-            List<CategoryItem> categoryItemList = await (from categoryitem in _context.CategoryItem
+            // get category item depended on the categoryId  One to Many ReleationShip between
+            // category and category item
+            /***********/
+            // check if the category item contains content or not if contains the link will be edit content
+            // if not the link will be add content
 
+            List<CategoryItem> categoryItemList = await (from categoryitem in _context.CategoryItem
+                                                         join contentItem in _context.Content
+                                                         on categoryitem.Id equals contentItem.CategoryItem.Id
+                                                         into gj
+                                                         from subContent in gj.DefaultIfEmpty()
                                                          where categoryitem.CategoryId == categoryId
                                                          select new CategoryItem
                                                          {
@@ -36,9 +44,12 @@ namespace TechTreeMVCWebApplication.Areas.Admin.Controllers
                                                              MediaTypeId = categoryitem.MediaTypeId,
                                                              Title = categoryitem.Title,
                                                              Id = categoryitem.Id,
-                                                             CategoryId = categoryitem.CategoryId
+                                                             CategoryId = categoryitem.CategoryId,
+                                                             contentId = (subContent!=null)?subContent.Id:0
                                                          }
             ).ToListAsync();
+
+            
             return View(categoryItemList);
         }
 

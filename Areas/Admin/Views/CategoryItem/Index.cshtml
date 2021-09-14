@@ -39,7 +39,16 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                @if (item.contentId != 0)
+                {
+                    <a  asp-route-categoryId="@item.CategoryId" asp-route-categoryItemId="@item.Id" asp-action="Edit" asp-area="Admin" asp-controller="Content" asp-route-id="@item.contentId">Edit Content</a>
+                }
+                else
+                {
+                    <a asp-route-CategoryId="@item.CategoryId" asp-route-CategoryItemId="@item.Id" asp-action="Create" asp-area="Admin" asp-controller="Content">Add Content</a>
+
+                }
             </td>
         </tr>
 }
