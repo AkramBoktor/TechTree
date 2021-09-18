@@ -34,7 +34,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateTimeItemReleased" class="control-label"></label>
-                <input asp-for="DateTimeItemReleased" class="form-control" />
+                <input type="text" name="DateTimeItemReleased" id="DateTimeItemReleased"
+                       value="@Model.DateTimeItemReleased.ToString("yyyy-MM-dd")"
+                       class="datepicker form-control" />
                 <span asp-validation-for="DateTimeItemReleased" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,5 +51,13 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @{
+
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_DatePicker");
+
+
+    }
+
 }
