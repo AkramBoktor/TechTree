@@ -1,15 +1,25 @@
-﻿<li class="nav-item dropdown show">
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore
+@using TechTreeMVCWebApplication.Data
 
-    <!--this link will be toggle button-->
-    <a class="dropdown-toggle nav-link text-dark" href="#" data-toggle="dropdown">
-        Admin
-    </a>
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
-    <div class="dropdown-menu">
-        <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
-        <a class="dropdown-item" href="#">User to Categories</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" asp-area="Admin" asp-controller="MediaType" asp-action="Index">Media Types</a>
-    </div>
+@if (SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
+{
+    <li class="nav-item dropdown show">
 
-</li>
+        <!--this link will be toggle button-->
+        <a class="dropdown-toggle nav-link text-dark" href="#" data-toggle="dropdown">
+            Admin
+        </a>
+
+        <div class="dropdown-menu">
+            <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
+            <a class="dropdown-item" href="#">User to Categories</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-area="Admin" asp-controller="MediaType" asp-action="Index">Media Types</a>
+        </div>
+
+    </li>
+}
