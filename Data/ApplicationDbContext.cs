@@ -16,7 +16,7 @@ namespace TechTreeMVCWebApplication.Data
         [StringLength(250)]
         public string FirstName { get; set; }
         [StringLength(250)]
-        public string SecondName { get; set; }
+        public string LastName { get; set; }
         [StringLength(250)]
         public string Address1 { get; set; }
         [StringLength(250)]
