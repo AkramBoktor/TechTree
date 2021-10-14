@@ -1,11 +1,26 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using TechTreeMVCWebApplication.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="text-center">
+        <h1 class="display-4">Welcome to TechTree</h1>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Not Logged in</h1>
+    </div>
+}
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
 
 <div class="modal fade" id="UserLoginModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
@@ -13,8 +28,17 @@
 
 </div>
 
+<div class="modal fade" id="UserRegisterationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
-@section Scripts{ 
-    <script src="~/js/UserLogin.js"></script>
+    <partial name="_UserRegisterationPartial">
+
+</div>
+
+
+@section Scripts{
+    <script src="~/js/UserLogin.js" asp-append-version="true"></script>
+    <script src="~/js/UserRegistration.js" asp-append-version="true"></script>
+    <script src="~/js/BootstrapAlerts.js" asp-append-version="true"></script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 } 
