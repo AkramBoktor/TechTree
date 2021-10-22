@@ -1,0 +1,56 @@
+﻿@model IEnumerable<TechTreeMVCWebApplication.Entities.CategoryItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-route-categoryId="@ViewBag.categoryId">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTimeItemReleased)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTimeItemReleased)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                @if (item.contentId != 0)
+                {
+                    <a  asp-route-categoryId="@item.CategoryId" asp-route-categoryItemId="@item.Id" asp-action="Edit" asp-area="Admin" asp-controller="Content" asp-route-id="@item.contentId">Edit Content</a>
+                }
+                else
+                {
+                    <a asp-route-CategoryId="@item.CategoryId" asp-route-CategoryItemId="@item.Id" asp-action="Create" asp-area="Admin" asp-controller="Content">Add Content</a>
+
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
