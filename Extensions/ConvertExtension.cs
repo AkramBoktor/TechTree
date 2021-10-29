@@ -17,7 +17,7 @@ namespace TechTreeMVCWebApplication.Extensions
                         Text = item.Title,
                         Value = item.Id.ToString(),
                         //it's boolean value true or false
-                        Selected = (item.Id == selectedValue)
+                        //Selected = (item.Id == selectedValue)
                     }).ToList();
         }
     }
