@@ -38,7 +38,7 @@ namespace TechTreeMVCWebApplication.Areas.Admin.Controllers
 
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Category.ToListAsync());
@@ -51,19 +51,42 @@ namespace TechTreeMVCWebApplication.Areas.Admin.Controllers
             List<UserCategory> usersSelectedForCategoryToAdd = null;
 
             if (usersCategoryListModel.UsersSelected != null)
-            { 
+            {
                 usersSelectedForCategoryToAdd = await GetUsersForCategoryToAdd(usersCategoryListModel);
             }
 
             var usersSelectedForCategoryToDelete = await GetUsersForCategoryToDelete(usersCategoryListModel.CategoryId);
 
-            await _dataFunctions.UpdateUserCategoryEntityAsync(usersSelectedForCategoryToDelete, usersSelectedForCategoryToAdd);
+            using (var dbContextTransaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+
+                    _context.RemoveRange(usersSelectedForCategoryToDelete);
+                    await _context.SaveChangesAsync();
+
+                    if (usersSelectedForCategoryToAdd != null)
+                    {
+                        _context.AddRange(usersSelectedForCategoryToAdd);
+                        await _context.SaveChangesAsync();
+                    }
+                    await dbContextTransaction.CommitAsync();
+
+                }
+
+                catch (Exception ex)
+                {
+                    await dbContextTransaction.DisposeAsync();
+                }
+            }
 
             usersCategoryListModel.Users = await GetAllUsers();
 
             return PartialView("_UsersListViewPartial", usersCategoryListModel);
 
         }
+
+
 
 
 
@@ -117,6 +140,7 @@ namespace TechTreeMVCWebApplication.Areas.Admin.Controllers
                                                        }).ToListAsync();
             return savedSelectedUsersForCategory;
         }
+
 
 
     }
