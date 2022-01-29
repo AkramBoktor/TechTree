@@ -1,44 +1,96 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@model CategoryDetailsModel
+
 @using TechTreeMVCWebApplication.Data
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
 
-@if (SignInManager.IsSignedIn(User))
-{
-    <div class="text-center">
-        <h1 class="display-4">Welcome to TechTree</h1>
-    </div>
-}
-else
-{
-    <div class="text-center">
-        <h1 class="display-4">Not Logged in</h1>
-    </div>
-}
 @{
     ViewData["Title"] = "Home Page";
 }
 
+@if (Model.GroupedCategoryItemsByCategoryModels != null)
+{
+    @if (Model.GroupedCategoryItemsByCategoryModels.Count() > 0)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Your Courses</h2>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+
+                @foreach (var cat in Model.GroupedCategoryItemsByCategoryModels)
+                {
+                    <div class="card mt-2">
+                        <h4 class="card-header text-secondary bg-white" style="cursor:pointer" data-toggle="collapse" data-target="#collapse_@cat.Id" aria-expanded="false" aria-controls="collapse_@cat.Id">
+                            @cat.Title
+                        </h4>
+                        <div id="collapse_@cat.Id" class="collapse" aria-expanded="false" aria-controls="collapse_@cat.Id">
+                            <hr />
+                            @foreach (var item in cat.Items)
+                            {
+                                <div class="mt-2">
+                                    <img src="@item.MediaImagePath" width="100" height="100" class="img-thumbnail float-left mr-2" />
+                                    <h5 class="card-title mt-2">
+                                        <a class="text-dark" asp-controller="Content" asp-action="Index" asp-route-CategoryItemId="@item.CategoryItemId">@item.CategoryItemTitle</a>
+                                    </h5>
+                                    <p class="card-text text-dark mt-2">
+                                        @item.CategoryItemDescription
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <h4 class="mt-2 text-warning">You are currently not matched with any courses</h4>
+ 
+    }
+}
+else
+{
+    <partial name="_DefaultHomePageContentPartial" model="@Model.Categories" />
+}
 
 
-<div class="modal fade" id="UserLoginModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
-    <partial name="_UserLoginPartial">
 
+<div class="modal fade" id="UserLoginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <partial name="_UserLoginPartial" model="new LoginModel
+        {
+            Email = String.Empty,
+            Password = String.Empty,
+            RememberMe = false
+        }">
 </div>
 
-<div class="modal fade" id="UserRegisterationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-
-    <partial name="_UserRegisterationPartial">
-
+<div class="modal fade" id="UserRegistrationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <partial name="_UserRegistrationPartial" model="new RegistrationModel
+        {
+            Email = String.Empty,
+            Password = String.Empty,
+            ConfirmPassword = String.Empty,
+            FirstName = String.Empty,
+            LastName = String.Empty,
+            PhoneNumber = String.Empty,
+            Address1 = String.Empty,
+            Address2 = String.Empty,
+            PostCode = String.Empty,
+            AcceptUserAgreement = false
+        }">
 </div>
 
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_AuthScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
 
-@section Scripts{
-    <script src="~/js/UserLogin.js" asp-append-version="true"></script>
-    <script src="~/js/UserRegistration.js" asp-append-version="true"></script>
-    <script src="~/js/BootstrapAlerts.js" asp-append-version="true"></script>
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
 
-} 
+}
