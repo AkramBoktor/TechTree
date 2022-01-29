@@ -17,14 +17,15 @@ namespace TechTreeMVCWebApplication.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
 
-        public UserAuthController(ApplicationDbContext _context,
-                                  SignInManager<ApplicationUser> _signInManager,
-                                  UserManager<ApplicationUser> _userManager)
+        public UserAuthController(ApplicationDbContext context,
+                                  UserManager<ApplicationUser> userManager,
+                                  SignInManager<ApplicationUser> signInManager)
         {
-            this._context = _context;
-            this._signInManager = _signInManager;
-            this._userManager = _userManager;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _context = context;
         }
+
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -49,7 +50,7 @@ namespace TechTreeMVCWebApplication.Controllers
 
             }
             return PartialView("_UserLoginPartial", loginModel);
-
+        
         }
 
         [AllowAnonymous]
@@ -69,13 +70,14 @@ namespace TechTreeMVCWebApplication.Controllers
             }
 
         }
-
+        
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterUser(RegistrationModel registrationModel)
         {
             registrationModel.RegistrationInValid = "true";
+
             if (ModelState.IsValid)
             {
                 ApplicationUser user = new ApplicationUser
@@ -99,35 +101,34 @@ namespace TechTreeMVCWebApplication.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    return PartialView("_UserRegisterationPartial", registrationModel);
+                    return PartialView("_UserRegistrationPartial", registrationModel);
                 }
 
                 AddErrorsToModelState(result);
 
             }
-            return PartialView("_UserRegisterationPartial", registrationModel);
-
+            return PartialView("_UserRegistrationPartial", registrationModel);
 
         }
 
-
-        //check id username exists
         [AllowAnonymous]
-        public async Task<bool> UserNameCheck(string userName)
+        public async Task<bool> UserNameExists(string userName)
         {
-            var userNameExists = await this._context.Users.AnyAsync(u => u.UserName.ToLower() == userName.ToLower());
+            bool userNameExists = await _context.Users.AnyAsync(u => u.UserName.ToUpper() == userName.ToUpper());
+
             if (userNameExists)
-            {
-                ModelState.AddModelError("User Name", "User Name already exists");
                 return true;
-            }
 
             return false;
+
         }
+
         private void AddErrorsToModelState(IdentityResult result)
         {
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
         }
+
+
     }
 }

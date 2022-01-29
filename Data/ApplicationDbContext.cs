@@ -10,9 +10,8 @@ using TechTreeMVCWebApplication.Entities;
 
 namespace TechTreeMVCWebApplication.Data
 {
-
-    public class ApplicationUser: IdentityUser
-    {
+    public class ApplicationUser:IdentityUser
+    { 
         [StringLength(250)]
         public string FirstName { get; set; }
         [StringLength(250)]
@@ -23,10 +22,10 @@ namespace TechTreeMVCWebApplication.Data
         public string Address2 { get; set; }
         [StringLength(50)]
         public string PostCode { get; set; }
-
-
+        
         [ForeignKey("UserId")]
-        public virtual ICollection<UserCategory> UserCategories { get; set; }
+        public virtual ICollection<UserCategory> UserCategory { get; set; }
+
     }
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -35,11 +34,11 @@ namespace TechTreeMVCWebApplication.Data
         {
         }
 
-
-        public DbSet<Content> Content { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<CategoryItem> CategoryItem { get; set; }
         public DbSet<MediaType> MediaType { get; set; }
         public DbSet<UserCategory> UserCategory { get; set; }
+        public DbSet<Content> Content { get; set; }
+
     }
 }

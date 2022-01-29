@@ -15,17 +15,24 @@ namespace TechTreeMVCWebApplication.Entities
         [StringLength(200, MinimumLength = 2)]
         public string Title { get; set; }
 
-        public string HtmlContent { get; set; }
+        [Display(Name ="HTML Content")]
+        public string HTMLContent { get; set; }
+
+        [Display(Name ="Video Link")]
         public string VideoLink { get; set; }
 
         public CategoryItem CategoryItem { get; set; }
 
-        //one to one releationship between content and category item
         [NotMapped]
         public int CatItemId { get; set; }
+        //Note: This property cannot be 
+        //named CategoryItemId because this would
+        //interfere with future migrations
+        //It has been named like this
+        //so as not to conflict with EF Core naming conventions
 
-        //one to many releationship between category and categry item
         [NotMapped]
         public int CategoryId { get; set; }
+        
     }
 }
